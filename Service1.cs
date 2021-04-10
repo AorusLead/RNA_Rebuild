@@ -28,6 +28,7 @@ namespace RNA_Rebuild
     }
 
 
+	public delegate string GetStr();
 	public delegate SuperFile GetScreenDelegate();
 
     [ServiceBehavior(InstanceContextMode = InstanceContextMode.Single, ConcurrencyMode = ConcurrencyMode.Multiple/*, IncludeExceptionDetailInFaults = true*/)]
@@ -173,15 +174,7 @@ namespace RNA_Rebuild
 
 		public SuperFile GetScreenShot(string Client)
 		{
-			//MessageBox.Show("1");
-			//GoLog(Client?.PcName, "Get screenshot");
-
-			GetScreenDelegate d = new GetScreenDelegate();
-			Clients[Client]?.Callback?.SendMessage("hello");
-
-			SuperFile r = null;
-			//r = Clients[Client]?.Callback?.GetScreenshot();
-			return r;
+			return new GetScreenDelegate(Clients[Client].Callback.GetScreenshot).Invoke(); ;
 		}
 
 		public Process[] GetProcesses(Client Client)
@@ -306,7 +299,6 @@ namespace RNA_Rebuild
 						PcName = NewPcName
 					};
 					Clients.Add( NewPcName, new_client );
-					new_client.Callback.SendMessage(new_client.Callback.Str());
 					foreach (var Admin in Admins) try { Admin.Value?.Callback?.Add_Client(new_client); } catch { }
                     return true;
                 }
