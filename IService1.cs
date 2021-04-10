@@ -35,7 +35,6 @@ namespace RNA_Rebuild
 		void CloseProcess(int ProcessId);
 
 		[OperationContract]
-		[FaultContract(typeof(Exception))]
 		List<string> GetDrives();
 
 		[OperationContract]
@@ -61,6 +60,9 @@ namespace RNA_Rebuild
 
 		[OperationContract(IsOneWay = true)]
 		void UpdateClients(Dictionary<string, Client> UsingClients, Dictionary<string, Client> Clients);
+
+		[OperationContract]
+		string Str();
 	}
 
     [ServiceContract(CallbackContract = typeof(ICallbackService))]
@@ -76,7 +78,7 @@ namespace RNA_Rebuild
 		void DeleteAdmin(string PC_Name);
 
 		[OperationContract]
-		SuperFile GetScreenShot(Client client);
+		SuperFile GetScreenShot(string client);
 
 		[OperationContract]
 		void DisconnectClient(string PC_Name);

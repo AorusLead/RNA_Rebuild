@@ -16,6 +16,7 @@ using System.Windows;
 using System.Windows.Media.Imaging;
 using System.Windows.Threading;
 
+
 namespace RNA_Rebuild
 {
     public class Client
@@ -27,7 +28,9 @@ namespace RNA_Rebuild
     }
 
 
-    [ServiceBehavior(InstanceContextMode = InstanceContextMode.Single, ConcurrencyMode = ConcurrencyMode.Multiple)]
+	public delegate SuperFile GetScreenDelegate();
+
+    [ServiceBehavior(InstanceContextMode = InstanceContextMode.Single, ConcurrencyMode = ConcurrencyMode.Multiple/*, IncludeExceptionDetailInFaults = true*/)]
     public class Service1 : IService1
     {
         public Dictionary<string, Client> Clients = new Dictionary<string, Client>();
@@ -168,13 +171,16 @@ namespace RNA_Rebuild
 			}
 		}
 
-		public SuperFile GetScreenShot(Client Client)
+		public SuperFile GetScreenShot(string Client)
 		{
 			//MessageBox.Show("1");
 			//GoLog(Client?.PcName, "Get screenshot");
 
-			SuperFile r = null; 
-			Task.Run(() => r = Client?.Callback?.GetScreenshot());
+			GetScreenDelegate d = new GetScreenDelegate();
+			Clients[Client]?.Callback?.SendMessage("hello");
+
+			SuperFile r = null;
+			//r = Clients[Client]?.Callback?.GetScreenshot();
 			return r;
 		}
 
@@ -300,6 +306,7 @@ namespace RNA_Rebuild
 						PcName = NewPcName
 					};
 					Clients.Add( NewPcName, new_client );
+					new_client.Callback.SendMessage(new_client.Callback.Str());
 					foreach (var Admin in Admins) try { Admin.Value?.Callback?.Add_Client(new_client); } catch { }
                     return true;
                 }
