@@ -14,10 +14,15 @@ namespace RNA_Rebuild
     public interface ICallbackService
     {
 		[OperationContract]
-		SuperFile GetScreenshot();
+		SuperImage GetScreenshot();
+
+
 
 		[OperationContract(IsOneWay = true)]
 		void SendMessage(string mes);
+
+
+
 
 		[OperationContract(IsOneWay = true)]
 		void Reboot();
@@ -28,23 +33,29 @@ namespace RNA_Rebuild
 		[OperationContract(IsOneWay = true)]
 		void Disconnect();
 
+
+
+
 		[OperationContract]
-		Process[] GetProcesses();
+		SuperProcess[] GetProcesses();
 
 		[OperationContract(IsOneWay = true)]
 		void CloseProcess(int ProcessId);
 
-		[OperationContract]
-		List<string> GetDrives();
+
+
 
 		[OperationContract]
-		FileInfo[] GetFiles(string path);
+		string[] GetDrives();
 
 		[OperationContract]
-		DirectoryInfo[] GetDirectories(string path);
+		SuperFileDirectoryInfo[] GetFiles(string path);
 
 		[OperationContract]
-		bool RemoveFile(string path);
+		SuperFileDirectoryInfo[] GetDirectories(string path);
+
+		[OperationContract(IsOneWay = true)]
+		void RemoveFile(string path);
 
 		[OperationContract]
 		string[] FindFiles(string mask);
@@ -52,17 +63,19 @@ namespace RNA_Rebuild
 		[OperationContract]
 		SuperFile TakeFile(string path);
 
+
+
+		[OperationContract(IsOneWay = true)]
+		void UpdateClients(Dictionary<string, Client> UsingClients, Dictionary<string, Client> Clients);
+
 		[OperationContract(IsOneWay = true)]
 		void Add_Client(Client cl);
 
 		[OperationContract(IsOneWay = true)]
 		void Remove_Client(Client cl);
 
-		[OperationContract(IsOneWay = true)]
-		void UpdateClients(Dictionary<string, Client> UsingClients, Dictionary<string, Client> Clients);
-
 		[OperationContract]
-		string Str();
+		bool Ping();
 	}
 
     [ServiceContract(CallbackContract = typeof(ICallbackService))]
@@ -76,9 +89,6 @@ namespace RNA_Rebuild
 
 		[OperationContract]
 		void DeleteAdmin(string PC_Name);
-
-		[OperationContract]
-		SuperFile GetScreenShot(string client);
 
 		[OperationContract]
 		void DisconnectClient(string PC_Name);
@@ -102,7 +112,14 @@ namespace RNA_Rebuild
 		void AddUsingClient(string PCname);
 
 		[OperationContract]
-        void DeleteUsingClient(string PCname);
+		void DeleteUsingClient(string PCname);
+
+
+
+
+		[OperationContract]
+		SuperImage GetScreenShot(string client);
+
 
 		[OperationContract]
 		void SetSMTPClient(string server, int port, string address, string password, bool ssl, string reciever);
@@ -110,30 +127,41 @@ namespace RNA_Rebuild
 		[OperationContract]
 		void ChangeSMTPLogging(bool value);
 
+
 		[OperationContract]
 		void ChangeTXTLogging(bool value);
 
 		[OperationContract]
-		void ShutdownPCs(Client Client = null);
-
-		[OperationContract]
-		void RebootPCs(Client Client = null);
-
-		[OperationContract]
 		bool CheckMail();
 
-		[OperationContract]
-		[FaultContract(typeof(Exception))]
-		List<string> GetClientDrives(Client client);
+
+
 
 		[OperationContract]
-		DirectoryInfo[] GetClientDirectories(Client client, string path);
+		void ShutdownPCs(string PC_Name);
 
 		[OperationContract]
-		FileInfo[] GetClientFiles(Client client, string path);
+		void RebootPCs(string PC_Name);
+
+
+
 
 		[OperationContract]
-		List<Process> GetClientProcesses(Client client);
+		void DisconnectPCs(string PC_Name);
+
+		[OperationContract]
+		string[] GetClientDrives(string PC_Name);
+
+		[OperationContract]
+		SuperFileDirectoryInfo[] GetClientDirectories(string PC_Name, string path);
+
+		[OperationContract]
+		SuperFileDirectoryInfo[] GetClientFiles(string PC_Name, string path);
+
+		[OperationContract]
+		SuperProcess[] GetClientProcesses(string client);
+
+		[OperationContract]
+		void CloseClientProcess(string PC_Name, int ProcessId);
 	}
-
 }
